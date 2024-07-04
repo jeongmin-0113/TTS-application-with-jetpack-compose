@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,6 +23,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -69,8 +72,8 @@ fun AppScreen(
             onClick = { textViewModel.onTextPlayed(context) },
         ) {
             Icon(
-                tint = Color.White,
-                imageVector = Icons.Default.PlayArrow,
+                tint = MaterialTheme.colorScheme.onBackground,
+                imageVector = Icons.Filled.PlayArrow,
                 contentDescription = "Play",
             )
         }
@@ -94,7 +97,6 @@ fun CustomTextbar(
     OutlinedTextField(
         value = msg,
         onValueChange = onMsgChanged,
-        textStyle = TextStyle(color = Color.White),
         placeholder = { Text(text = "What do you want to say?") }
     )
 }
