@@ -1,8 +1,6 @@
 package com.example.preapp
 
-import android.content.Context
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -27,11 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.preapp.ui.theme.PreAppTheme
-import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +34,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PreAppTheme {
                 Scaffold(modifier = Modifier) { innerPadding ->
-                    appScreen(modifier = Modifier.padding(innerPadding), textViewModel = TextViewModel())
+                    AppScreen(modifier = Modifier.padding(innerPadding), textViewModel = TextViewModel())
                 }
             }
         }
@@ -48,7 +42,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun appScreen(
+fun AppScreen(
     modifier: Modifier = Modifier,
     textViewModel: TextViewModel = TextViewModel(),
 ) {
@@ -65,7 +59,7 @@ fun appScreen(
             alignment = Alignment.CenterVertically
         )
     ) {
-        textBar(
+        CustomTextbar(
             msg = myMessage,
             onMsgChanged = {textViewModel.onTextChanged(it)}
         )
@@ -85,14 +79,14 @@ fun appScreen(
 
 @Preview
 @Composable
-fun preview_appScreen() {
+fun PreviewOfAppScreen() {
     PreAppTheme {
-        appScreen()
+        AppScreen()
     }
 }
 
 @Composable
-fun textBar(
+fun CustomTextbar(
     modifier: Modifier = Modifier,
     msg: String,
     onMsgChanged: (String) -> Unit
@@ -107,33 +101,11 @@ fun textBar(
 
 @Preview
 @Composable
-fun preview_Textbar() {
+fun PreviewOfCustomTextbar() {
     PreAppTheme {
         val textViewModel = TextViewModel()
         val msg by textViewModel.text.observeAsState("")
-        textBar(msg = msg, onMsgChanged = {textViewModel.onTextChanged(it)})
+        CustomTextbar(msg = msg, onMsgChanged = {textViewModel.onTextChanged(it)})
     }
 }
 
-class TextViewModel: ViewModel() {
-    private val _text = MutableLiveData("")
-    val text: LiveData<String> = _text
-    private var textToSpeech:TextToSpeech? = null
-
-    fun onTextChanged(newText: String) { _text.value = newText }
-
-    fun onTextPlayed(context: Context) {
-        textToSpeech = TextToSpeech(context) {
-            textToSpeech?.let { txtToSpeech ->
-                txtToSpeech.language = Locale.KOREA
-                txtToSpeech.setSpeechRate(1.0f)
-                txtToSpeech.speak(
-                    _text.value,
-                    TextToSpeech.QUEUE_ADD,
-                    null,
-                    null
-                )
-            }
-        }
-    }
-}
